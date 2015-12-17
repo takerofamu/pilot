@@ -7,3 +7,9 @@ select t2.tenant_name, t2.discnt_price_per_month, t2.discnt_price_per_sms, count
 from contact_sms t1 left join tenant_info t2 on t1.tenant_id=t2.tenant_id
 where t1.send_date like '2015-10_%'
 group by t2.tenant_name
+
+
+
+sql.append(WhereUtil._dateTimeNoFormatBegin("send_date", dateStr, "", "", OPERATOR_TYPE.LESS_OR_EQUAL, CONDITION_TYPE.EMPTY));
+		sql.append(WhereUtil._dateTimeNoFormatEnd("send_date", dateStr, "", "", OPERATOR_TYPE.GREATER_OR_EQUAL, CONDITION_TYPE.AND));
+		sql.append(WhereUtil.like_(CONDITION_TYPE.EMPTY, "send_date", value, LIKE_TYPE.AFTER))
