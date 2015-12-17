@@ -1,0 +1,9 @@
+select t2.tenant_name, t2.discnt_price_per_month, t2.discnt_price_per_sms, count(distinct t1.sms_id) as sms_total,
+(select count(distinct sms_id) from contact_sms where tenant_id=t2.tenant_id and sms_status = 'success' and send_date like '2015-10_%') as successSms,
+(select count(distinct sms_id) from contact_sms where tenant_id=t2.tenant_id and sms_status != 'success' and send_date like '2015-10_%') as failedSms,
+(select price_per_month from contact_sms_price where sms_price_id=1) as price_per_month,
+(select price_per_sms from contact_sms_price where sms_price_id=1) as price_per_sms,
+(select tax_rate  from price_tax where tax_affect_from<='2015-10' and tax_affect_to>='2015-10') as tax_rate
+from contact_sms t1 left join tenant_info t2 on t1.tenant_id=t2.tenant_id
+where t1.send_date like '2015-10_%'
+group by t2.tenant_name
