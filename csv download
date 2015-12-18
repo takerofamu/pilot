@@ -1,0 +1,68 @@
+    @Execute(validator = false)
+    public String csvDownload () {
+    	try{
+    		callLogService.csvDownload(callLogForm,paging,MessageResourcesUtil.getMessage("labels_page_name_sms_statistic"),
+    			getActionName(this),
+    			new String[]{
+    			MessageResourcesUtil.getMessage("labels.companyName"),
+    			MessageResourcesUtil.getMessage("labels.smsTotal"),
+    			MessageResourcesUtil.getMessage("labels.successSmsTotal"),
+    			MessageResourcesUtil.getMessage("labels.failureSmsTotal"),
+    			MessageResourcesUtil.getMessage("labels.pricePerMonth"),
+    			MessageResourcesUtil.getMessage("labels.pricePerSms"),
+    			MessageResourcesUtil.getMessage("labels.discountOnMonth"),
+    			MessageResourcesUtil.getMessage("labels.discountOnSms"),
+    			MessageResourcesUtil.getMessage("labels.subTotal"),
+    			MessageResourcesUtil.getMessage("labels.taxRate"),
+    			MessageResourcesUtil.getMessage("labels.total")},
+    		    true,true);
+    	}catch (Exception e) {
+        	log.error("",e);
+        	return "list.jsp";
+		}
+        return null;
+	}
+	
+	
+	
+		public String tenantId = "";
+	
+	public String fromDate = "";
+	
+	public String toDate = "";
+	
+	<html:hidden property="tenantId"/>
+	<html:hidden property="fromDate"/>
+	<html:hidden property="toDate"/>
+	
+	
+	action=>select
+	smsStatisticForm.tenantId = 
+	
+	
+	
+	
+	================sql
+select tenantName,
+sms_total,
+successSmsTotal,
+failureSmsTotal,
+pricePerMonth,
+pricePerSms,
+discnt_price_per_month,
+discnt_price_per_sms,
+format(successSmsTotal * (pricePerSms - discnt_price_per_sms) + pricePerMonth,0) as subTotal,
+tax_rate,
+format((((successSmsTotal * (pricePerSms - discnt_price_per_sms) + pricePerMonth)-discnt_price_per_month)+
+((((successSmsTotal * (pricePerSms - discnt_price_per_sms) + pricePerMonth)-discnt_price_per_month)*tax_rate)/100)), 0) as total
+from(select (select count(distinct sms_id) from contact_sms where tenant_id=t2.tenant_id and sms_status = 'success' and send_date like '2015-10_%') as successSmsTotal,
+             (select count(distinct sms_id) from contact_sms where tenant_id=t2.tenant_id and sms_status != 'success' and send_date like '2015-10_%') as failureSmsTotal,
+             (select price_per_month from contact_sms_price limit 1)as pricePerMonth,
+             (select price_per_sms from contact_sms_price limit 1)as pricePerSms,
+             (select tax_rate from price_tax where tax_affect_from<='2015-10-01' and tax_affect_to>='2015-10-31') as tax_rate,
+      t2.tenant_name as tenantName, t2.discnt_price_per_month, t2.discnt_price_per_sms,
+      count(distinct t1.sms_id) as sms_total, t1.send_date as send_date, t2.tenant_id
+      from contact_sms t1 left join tenant_info t2 on t1.tenant_id=t2.tenant_id
+      group by t2.tenant_name) as SubTable
+where send_date like '2015-10_%' and tenant_id=1
+group by tenantName
