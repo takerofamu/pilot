@@ -1,0 +1,85 @@
+
+
+function addInvoiceDetailsRow(){
+	var rowCount = $('#tbl_invoice_details > tbody > tr').length;
+	var newRowId = rowCount +1;
+	var newRow;
+	newRow += '<tr>';
+	newRow += '<td><input type="text" name="invoiceDetailsArr["'+newRowId+'"].insuranceType"/></td>';
+	newRow += '<td><input type="text" name="invoiceDetailsArr["'+newRowId+'"].insuranceApplyDest"/></td>';
+	newRow += '<td><input type="text" name="invoiceDetailsArr["'+newRowId+'"].insuranceStartDay" class="date"/></td>';
+	newRow += '<td><input type="text" name="invoiceDetailsArr["'+newRowId+'"].insuranceEndDay" class="date"/></td>';
+	newRow += '<td><input type="text" name="invoiceDetailsArr["'+newRowId+'"].securityNumber"/></td>';
+	newRow += '<td><input type="text" name="invoiceDetailsArr["'+newRowId+'"].paymentAmount"/></td>';
+	newRow += '<td><input type="text" name="invoiceDetailsArr["'+newRowId+'"].invoiceDetailsRemark1"/></td>';
+	newRow += '<td><input type="text" name="invoiceDetailsArr["'+newRowId+'"].invoiceDetailsRemark2"/></td>';
+	newRow += '<td></td>';
+	newRow += '</tr>';
+	$('#tbl_invoice_details tbody:last').after(newRow);
+	$('#tbl_invoice_details tbody > tr:first #up, #tbl_invoice_details tbody > tr:last #down').hide();
+	$('#up, #down').on('click', revertLocation);
+	$('#remove').on('click', removeInvoiceDetailsRow);
+}
+
+
+
+function removeInvoiceDetailsRow(){
+	$(this).closet('tr').remove();
+	return false;
+}
+
+
+function revertLocation(){
+	var current_row = $(this).closet('tr');
+	var current_row_id = parseInt(current_row.attr('id'));
+		if($(this).is('#up')){
+			var next_row = current_row.next();
+			var next_row_id = current_row_id + 1;
+			current_row.find('td').each(function(){
+				$('[name="invoiceDetailsArr['+current_row_id+'].insuranceType"]').attr('name','invoiceDetailsArr['+next_row_id+'].insuranceType');
+				$('[name="invoiceDetailsArr['+current_row_id+'].insuranceApplyDest"]').attr('name','invoiceDetailsArr['+next_row_id+'].insuranceApplyDest');
+				$('[name="invoiceDetailsArr['+current_row_id+'].insuranceStartDay"]').attr('name','invoiceDetailsArr['+next_row_id+'].insuranceStartDay');
+				$('[name="invoiceDetailsArr['+current_row_id+'].insuranceEndDay"]').attr('name','invoiceDetailsArr['+next_row_id+'].insuranceEndDay');
+				$('[name="invoiceDetailsArr['+current_row_id+'].securityNumber"]').attr('name','invoiceDetailsArr['+next_row_id+'].securityNumber');
+				$('[name="invoiceDetailsArr['+current_row_id+'].paymentAmount"]').attr('name','invoiceDetailsArr['+next_row_id+'].paymentAmount');
+				$('[name="invoiceDetailsArr['+current_row_id+'].invoiceDetailsRemark1"]').attr('name','invoiceDetailsArr['+next_row_id+'].invoiceDetailsRemark1');
+				$('[name="invoiceDetailsArr['+current_row_id+'].invoiceDetailsRemark2"]').attr('name','invoiceDetailsArr['+next_row_id+'].invoiceDetailsRemark2');
+			});
+			next_row.find('td').each(function(){
+				$('[name="invoiceDetailsArr['+next_row_id+'].insuranceType"]').attr('name','invoiceDetailsArr['+current_row_id+'].insuranceType');
+				$('[name="invoiceDetailsArr['+next_row_id+'].insuranceApplyDest"]').attr('name','invoiceDetailsArr['+current_row_id+'].insuranceApplyDest');
+				$('[name="invoiceDetailsArr['+next_row_id+'].insuranceStartDay"]').attr('name','invoiceDetailsArr['+current_row_id+'].insuranceStartDay');
+				$('[name="invoiceDetailsArr['+next_row_id+'].insuranceEndDay"]').attr('name','invoiceDetailsArr['+current_row_id+'].insuranceEndDay');
+				$('[name="invoiceDetailsArr['+next_row_id+'].securityNumber"]').attr('name','invoiceDetailsArr['+current_row_id+'].securityNumber');
+				$('[name="invoiceDetailsArr['+next_row_id+'].paymentAmount"]').attr('name','invoiceDetailsArr['+current_row_id+'].paymentAmount');
+				$('[name="invoiceDetailsArr['+next_row_id+'].invoiceDetailsRemark1"]').attr('name','invoiceDetailsArr['+current_row_id+'].invoiceDetailsRemark1');
+				$('[name="invoiceDetailsArr['+next_row_id+'].invoiceDetailsRemark2"]').attr('name','invoiceDetailsArr['+current_row_id+'].invoiceDetailsRemark2');
+			});
+			current_row.insertAfter(next_row);
+		}
+		if($(this).is('#down')){
+			var pre_row = current_row.pre();
+			var pre_row_id = current_row_id - 1;
+			current_row.find('td').each(function(){
+				$('[name="invoiceDetailsArr['+current_row_id+'].insuranceType"]').attr('name','invoiceDetailsArr['+pre_row_id+'].insuranceType');
+				$('[name="invoiceDetailsArr['+current_row_id+'].insuranceApplyDest"]').attr('name','invoiceDetailsArr['+pre_row_id+'].insuranceApplyDest');
+				$('[name="invoiceDetailsArr['+current_row_id+'].insuranceStartDay"]').attr('name','invoiceDetailsArr['+pre_row_id+'].insuranceStartDay');
+				$('[name="invoiceDetailsArr['+current_row_id+'].insuranceEndDay"]').attr('name','invoiceDetailsArr['+pre_row_id+'].insuranceEndDay');
+				$('[name="invoiceDetailsArr['+current_row_id+'].securityNumber"]').attr('name','invoiceDetailsArr['+pre_row_id+'].securityNumber');
+				$('[name="invoiceDetailsArr['+current_row_id+'].paymentAmount"]').attr('name','invoiceDetailsArr['+pre_row_id+'].paymentAmount');
+				$('[name="invoiceDetailsArr['+current_row_id+'].invoiceDetailsRemark1"]').attr('name','invoiceDetailsArr['+pre_row_id+'].invoiceDetailsRemark1');
+				$('[name="invoiceDetailsArr['+current_row_id+'].invoiceDetailsRemark2"]').attr('name','invoiceDetailsArr['+pre_row_id+'].invoiceDetailsRemark2');
+			});
+			pre_row.find('td').each(function(){
+				$('[name="invoiceDetailsArr['+pre_row_id+'].insuranceType"]').attr('name','invoiceDetailsArr['+current_row_id+'].insuranceType');
+				$('[name="invoiceDetailsArr['+pre_row_id+'].insuranceApplyDest"]').attr('name','invoiceDetailsArr['+current_row_id+'].insuranceApplyDest');
+				$('[name="invoiceDetailsArr['+pre_row_id+'].insuranceStartDay"]').attr('name','invoiceDetailsArr['+current_row_id+'].insuranceStartDay');
+				$('[name="invoiceDetailsArr['+pre_row_id+'].insuranceEndDay"]').attr('name','invoiceDetailsArr['+current_row_id+'].insuranceEndDay');
+				$('[name="invoiceDetailsArr['+pre_row_id+'].securityNumber"]').attr('name','invoiceDetailsArr['+current_row_id+'].securityNumber');
+				$('[name="invoiceDetailsArr['+pre_row_id+'].paymentAmount"]').attr('name','invoiceDetailsArr['+current_row_id+'].paymentAmount');
+				$('[name="invoiceDetailsArr['+pre_row_id+'].invoiceDetailsRemark1"]').attr('name','invoiceDetailsArr['+current_row_id+'].invoiceDetailsRemark1');
+				$('[name="invoiceDetailsArr['+pre_row_id+'].invoiceDetailsRemark2"]').attr('name','invoiceDetailsArr['+current_row_id+'].invoiceDetailsRemark2');
+			});
+			current_row.insertAfter(pre_row);
+		}
+	}
